@@ -19,24 +19,26 @@ export async function POST(
 
   const { listingId } = params;
 
-  if (!listingId || typeof listingId !== 'string') {
-    throw new Error('Invalid ID');
+  if (!listingId || typeof listingId !== "string") {
+    throw new Error("Invalid ID");
   }
 
-  let favoriteIds = [...(currentUser.favoriteIds || [])];
+  // Ensure favoriteIds is an array before using it
+  let favoriteIds = Array.isArray(currentUser.favoriteIds)
+    ? [...currentUser.favoriteIds]
+    : [];
 
-  favoriteIds.push(listingId);
+  // Check if listingId is already in favoriteIDs to avoid duplicates
+  if (!favoriteIds.includes(listingId)) {
+    favoriteIds.push(listingId);
 
-  const user = await prisma.user.update({
-    where: {
-      id: currentUser.id
-    },
-    data: {
-      favoriteIds
-    }
-  });
+    const user = await prisma.user.update({
+      where: { id: currentUser.id },
+      data: { favoriteIds: favoriteIds },
+    });
 
-  return NextResponse.json(user);
+    return NextResponse.json(user);
+  }
 }
 
 export async function DELETE(
@@ -51,22 +53,25 @@ export async function DELETE(
 
   const { listingId } = params;
 
-  if (!listingId || typeof listingId !== 'string') {
-    throw new Error('Invalid ID');
+  if (!listingId || typeof listingId !== "string") {
+    throw new Error("Invalid ID");
   }
 
-  let favoriteIds = [...(currentUser.favoriteIds || [])];
+  // Ensure favoriteIds is an array before using it
+  let favoriteIds = Array.isArray(currentUser.favoriteIds)
+    ? [...currentUser.favoriteIds]
+    : [];
 
-  favoriteIds = favoriteIds.filter((id) => id !== listingId);
+  // Remove listingId from favoriteIds if it exists
+  const index = favoriteIds.indexOf(listingId);
+  if (index > -1) {
+    favoriteIds.splice(index, 1);
 
-  const user = await prisma.user.update({
-    where: {
-      id: currentUser.id
-    },
-    data: {
-      favoriteIds
-    }
-  });
+    const user = await prisma.user.update({
+      where: { id: currentUser.id },
+      data: { favoriteIds: favoriteIds },
+    });
 
-  return NextResponse.json(user);
+    return NextResponse.json(user);
+  }
 }

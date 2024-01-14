@@ -10,10 +10,15 @@ export default async function getFavoriteListings() {
       return [];
     }
 
+    // Filter and convert favoriteIds to string array
+    const favoriteIds = Array.isArray(currentUser.favoriteIds)
+    ? currentUser.favoriteIds.filter((id): id is string => typeof id === 'string')
+    : [];
+
     const favorites = await prisma.listing.findMany({
       where: {
         id: {
-          in: [...(currentUser.favoriteIds || [])]
+          in: favoriteIds
         }
       }
     });
