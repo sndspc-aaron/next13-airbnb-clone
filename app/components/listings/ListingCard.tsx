@@ -75,7 +75,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       onClick={() => router.push(`/listings/${data.id}`)} 
       className="col-span-1 cursor-pointer group"
     >
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-1 w-full">
         <div 
           className="
             aspect-square 
@@ -110,13 +110,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-md leading-none">
-          {location?.region}, {location?.label}          
+          {data.title}      
         </div>
         <div className="text-sm text-neutral-500">
-          {reservationDate || data.category}          
+          <div>{location?.region}, {location?.label}</div>
+          <div>{reservationDate || data.category}</div> 
         </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="text-md font-semibold leading-8">
+          <div className="text-md font-semibold leading-7 mb-1">
             ${price}
           </div>   
           {!reservation && (
