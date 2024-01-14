@@ -83,6 +83,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             relative 
             overflow-hidden 
             rounded-xl
+            mb-3
           "
         >
           <Image
